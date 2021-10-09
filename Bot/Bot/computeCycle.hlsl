@@ -123,31 +123,22 @@ void main( uint3 DTid : SV_DispatchThreadID )
 				float4 curColor = ScreenTex.Load(int3(curPix, curLine, 0));
 				unsigned int curHTML = uint(curColor.r * 255) * 65536 + uint(curColor.g * 255) * 256 + uint(curColor.b * 255);
 
-				//BufferOut.Store(0, curHTML);
-				//BufferOut.Store(4, 123);
-				//if (curHTML != 0)
-				if (curHTML == 0x292a2a) // 1
-				//if (curHTML == 0x499FF3)
+				if (curHTML == 0x292a2a || curHTML == 0x393a39) // 1st corner pixel, gtx 970 and rtx 3070
 				{
 					float4 nextColor = ScreenTex.Load(int3(curPix + 1, curLine, 0));
 					unsigned int nextHTML = uint(nextColor.r * 255) * 65536 + uint(nextColor.g * 255) * 256 + uint(nextColor.b * 255);
 
-					//BufferOut.Store(0, 456);
-					//BufferOut.Store(4, 456);
-
-					if (nextHTML == 0x303232) // 2
+					if (nextHTML == 0x303232 || nextHTML == 0x373937) // 2
 					{
 						nextColor = ScreenTex.Load(int3(curPix + 2, curLine, 0));
 						nextHTML = uint(nextColor.r * 255) * 65536 + uint(nextColor.g * 255) * 256 + uint(nextColor.b * 255);
 
-						//BufferOut.Store(0, 789);
-						//BufferOut.Store(4, 789);
-
-						if (nextHTML == 0x2f2f30) // 3
+						if (nextHTML == 0x2f2f30 || nextHTML == 0x343535) // 3
 						{
 							nextColor = ScreenTex.Load(int3(curPix + 3, curLine, 0));
 							nextHTML = uint(nextColor.r * 255) * 65536 + uint(nextColor.g * 255) * 256 + uint(nextColor.b * 255);
-							if (nextHTML == 0x2f3031) // 4
+
+							if (nextHTML == 0x2f3031 || nextHTML == 0x323434) // 4
 							{
 								windowPosX = curPix;
 								windowPosY = curLine;
@@ -160,7 +151,7 @@ void main( uint3 DTid : SV_DispatchThreadID )
 			}
 		}
 	}
-	
+
 	// generic window only tests
 	// 
 	// single pixel tests
@@ -174,9 +165,6 @@ void main( uint3 DTid : SV_DispatchThreadID )
 
 		float4 prevColor = ScreenTex.Load(int3(curPix + windowPosX - 1, curLine + windowPosY, 0));
 		unsigned int prevHTML = uint(prevColor.r * 255) * 65536 + uint(prevColor.g * 255) * 256 + uint(prevColor.b * 255);
-
-		//BufferOut.Store(12, curHTML);
-		//BufferOut.Store(16, prevHTML);
 
 		if (curHTML == 0xfff6e3)
 		{
@@ -202,9 +190,6 @@ void main( uint3 DTid : SV_DispatchThreadID )
 		prevColor = ScreenTex.Load(int3(curPix + windowPosX - 1, curLine + windowPosY, 0));
 		prevHTML = uint(prevColor.r * 255) * 65536 + uint(prevColor.g * 255) * 256 + uint(prevColor.b * 255);
 
-		//BufferOut.Store(24, curHTML);
-		//BufferOut.Store(28, prevHTML);
-
 		if (curHTML == 0xfff6e3)
 		{
 			if (prevHTML == 0x7d786f || prevHTML == 0x7c786f)
@@ -227,9 +212,6 @@ void main( uint3 DTid : SV_DispatchThreadID )
 		prevColor = ScreenTex.Load(int3(curPix + windowPosX - 1, curLine + windowPosY, 0));
 		prevHTML = uint(prevColor.r * 255) * 65536 + uint(prevColor.g * 255) * 256 + uint(prevColor.b * 255);
 
-		//BufferOut.Store(216, curHTML);
-		//BufferOut.Store(220, prevHTML);
-
 		if (curHTML == 0xeae1d0 || curHTML == 0x00b2ab9e)
 		{
 			if (prevHTML == 0x68615b || prevHTML == 0x0069635c)
@@ -248,41 +230,6 @@ void main( uint3 DTid : SV_DispatchThreadID )
 		// reset to zero item found
 		BufferOut.Store(128, 0);
 	}
-
-	// screen scan for lost city ancient tunnels entrance
-	/*
-	if (windowPosX != 0)
-	{
-		float bestDiff = 30000.0f;
-
-		for (int curScreenLine = 0; curScreenLine < 720; curScreenLine++)
-		{
-			int curLine = curScreenLine + windowPosY;
-
-			for (int curPixBlock = 0; curPixBlock < 1280; curPixBlock += 32)
-			{
-				int curPix = curPixBlock + DTid + windowPosX;
-				float4 curColor1 = ScreenTex.Load(int3(curPix, curLine, 0));
-				float4 curColor2 = ScreenTex.Load(int3(curPix + 61, curLine, 0));
-				float4 curColor3 = ScreenTex.Load(int3(curPix + 66, curLine, 0));
-				float4 curColor4 = ScreenTex.Load(int3(curPix, curLine + 28, 0));
-				
-				float curDiff = fuzzyMatchGroup4(curColor1, curColor2, curColor3, curColor4, 0x302a20, 0x18150e, 0x7a684e, 0x5d523f);
-
-				if (curDiff < bestDiff)
-				{
-					bestDiff = curDiff;
-					tunnelsEntranceFound = bestDiff * 100000;
-					tunnelsEntranceX = curPix - windowPosX;
-					tunnelsEntranceY = curLine - windowPosY;
-					BufferOut.Store(56, tunnelsEntranceFound);
-					BufferOut.Store(60, tunnelsEntranceX);
-					BufferOut.Store(64, tunnelsEntranceY);
-				}
-			}
-		}
-	}
-	*/
 
 	// screen scan for items
 	if (windowPosX != 0)
