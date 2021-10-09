@@ -61,40 +61,51 @@ void farmSequence::tick()
 	SetConsoleTextAttribute(hConsole, 8);
 	if (g_seq == 0)
 	{
-		static int firstLoop = 1;
-		if (firstLoop)
-		{
-			firstLoop = 0;
-			printf("Starting up in 3 sec\n");
-			Sleep(3 * 1000);
-		}
+		Sleep(16);
 		seqPickRetry = 0;
 		// click play
 		if (g_screen.pReadback && g_screen.pReadback->playButtonFound)
 		{
+			static int firstLoop = 1;
+			if (firstLoop)
+			{
+				firstLoop = 0;
+				printf("Starting up in 3 sec\n");
+				Sleep(3 * 1000);
+			}
 			g_seq = 1;
-			printf("clicking PLAY at %d, %d",
+			printf("\nclicking PLAY at %d, %d",
 				g_screen.pReadback->windowPosX + g_screen.pReadback->playButtonX,
 				g_screen.pReadback->windowPosY + g_screen.pReadback->playButtonY);
-			//Sleep(1000 * 5);
-			for (int i = 0; i < 1; i++)
-			{
-				//Sleep(10);
-				clickRandom3(
-					g_screen.pReadback->windowPosX + g_screen.pReadback->playButtonX,
-					g_screen.pReadback->windowPosY + g_screen.pReadback->playButtonY, 0);
-			}
+
+
+			clickRandom3(
+				g_screen.pReadback->windowPosX + g_screen.pReadback->playButtonX,
+				g_screen.pReadback->windowPosY + g_screen.pReadback->playButtonY, 0);
 
 			printf("...click\n");
 			sleepRandomBig();
 		}
+		else if (g_screen.pReadback)
+		{
+			
+			static int firstLoop1 = 1;
+			if (firstLoop1)
+			{
+				firstLoop1 = 0;
+				printf("Tip: game window must be 1280x720 and show character selection.\n");
+				printf("Trying to locate Diablo 2 window...");
+			}
+			Sleep(3 * 1000);
+			printf(".");
+		}
+			
 	}
 
 	if (g_seq == 1)
 	{
 		if (g_screen.pReadback && g_screen.pReadback->hellButtonFound)
 		{
-			g_seq = 2;
 			printf("clicking HELL at %d, %d",
 				g_screen.pReadback->windowPosX + g_screen.pReadback->hellButtonX,
 				g_screen.pReadback->windowPosY + g_screen.pReadback->hellButtonY);
@@ -111,11 +122,13 @@ void farmSequence::tick()
 			Sleep(4000);
 			printf("...4 more on my old PC\n");
 			Sleep(4000);
+			g_seq = 20; //walker sequence next
 		}
 	}
 
 	if (g_seq == 2)
 	{
+		// sorc teleport sequence
 		int clickX, clickY;
 		clickX = 410 + g_screen.pReadback->windowPosX;
 		clickY = 620 + g_screen.pReadback->windowPosY;
@@ -371,5 +384,13 @@ void farmSequence::tick()
 			Sleep(4 * 1000);
 			g_seq = 0;
 		}
+	}
+
+
+
+	// NON-SORCS
+	//walker sequence
+	if (g_seq == 20)
+	{
 	}
 }
