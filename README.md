@@ -1,6 +1,8 @@
 # roomba
 Diablo 2 Resurrected assistive program
 
+this probably won't run on your PC somehow. I had to fix a bunch of things when I moved it over from one PC to another, colors weren't the exact same matches. But it's a good reference for how you could implement something similar on your own.
+
 1. set your Diablo 2 Resurrected options to default brightness
 2. set your Diablo 2 Resurrected to a 1280x720 window (the smallest it can go, just drag the bottom-right corner and shrink it
 3. Make sure your character is at the top of the character list and in Hell act 5
